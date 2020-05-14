@@ -1,0 +1,2 @@
+class LeidenPlusSyntaxError(Exception):
+    pass
