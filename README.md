@@ -8,7 +8,7 @@ A Python Markdown extension for converting Leiden+ epigraphic text to TEI XML/HT
 >>> content = """\
 <D=.r<=
 1. Lorem ipsum dolor
-2. sit amet, con[.ca.3]c
+2. sit amet, con[ca.3]c
 3.-etur  adipiscing
 =>=D>
 <D=.v<=
