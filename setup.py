@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name = 'leidenmark',
-    version = '0.1.0',
+    version = '0.1.1',
     description = 'A markdown extension for converting Leiden+ epigraphic text to TEI XML/HTML',
     packages = find_packages(),
     install_requires = ['markdown'],
