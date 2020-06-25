@@ -9,8 +9,8 @@ from .exceptions import LeidenPlusSyntaxError
 
 class DivisionsPreproc(Preprocessor):
 
-    RE_OPEN = re.compile(r'<D=\.(.+?)\.([a-z]+)|<D=.(r|v|le)|(<=)')
-    RE_CLOSE = re.compile(r'=(D?)>')
+    RE_OPEN = re.compile(r'(?:<D=\.(.+?)\.([a-z]+)|<D=.(r|v|le)|(<=))\s*')
+    RE_CLOSE = re.compile(r'=(D?)>\s*')
 
     def _find_first_mark(self, line):
         open_match = self.RE_OPEN.search(line)
