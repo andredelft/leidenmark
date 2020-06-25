@@ -19,6 +19,9 @@ class TEIPostprocesor(Postprocessor):
             el.tag = 'hi'
             el.attrib['rend'] = 'bold'
 
+        for el in tree.xpath('//h1'):
+            el.tag = 'head'
+
         etree.indent(tree, space = indent_unit)
 
         new_text = etree.tostring(tree, encoding = 'unicode')
