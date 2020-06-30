@@ -1,4 +1,5 @@
 from markdown.extensions import Extension
+from markdown import markdown
 
 from .divisions import DivisionsPreproc, DivisionMarkProcessor, DivisionMarkTreeproc, TrivialProcessor
 from .line_nums import LineNumsPreproc, NumberedBlocksProcessor
@@ -6,6 +7,7 @@ from .milestones import RE_MIL, MilestoneProcessor
 from .gaps_spaces import RE_SPACE, SpaceProcessor, RE_LINE_GAP, LineGapProcessor, RE_CHARACTER_GAP, CharacterGapProcessor
 from .to_xml import TEIPostprocesor
 from .misc import HetaProcessor, RE_HETA
+from .exceptions import LeidenPlusSyntaxError
 
 
 class LeidenPlus(Extension):
@@ -50,3 +52,9 @@ class LeidenEscape(Extension):
 # Some content
 # =>
 # ```
+
+def leiden_plus(content, **kwargs):
+    return markdown(content, extensions = [LeidenPlus(**kwargs)])
+
+def leiden_escape(content, **kwargs):
+    return markdown(content, extensions = [LeidenEscape(**kwargs)])
