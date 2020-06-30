@@ -1,4 +1,4 @@
-import re
+import regex as re
 from xml.etree import ElementTree as etree
 
 from markdown.preprocessors import Preprocessor
@@ -9,8 +9,21 @@ from .exceptions import LeidenPlusSyntaxError
 
 class DivisionsPreproc(Preprocessor):
 
-    RE_OPEN = re.compile(r'(?:<D=\.(.+?)\.([a-z]+)|<D=.(r|v|le)|(<=))\s*')
-    RE_CLOSE = re.compile(r'=(D?)>\s*')
+    RE_OPEN = re.compile(r"""
+        (?:
+          <D=\.(\S+?)\.([a-z]+)         # Division mark <D=.number.divisontype ... =D>
+          |<D=\.(r|v|le)                # Division mark (recto, versa, left edge)
+          |(<=)(?!\.(?:ms|lb|cb|pb|gb)) # Paragraph mark <= ... => (Check if it is not a milestone)
+        )\s*""",
+        flags = re.VERBOSE
+    )
+    RE_CLOSE = re.compile(r"""
+        (?:
+          (=D>)                                             # Division mark end
+          |(?<!<=\.(?:ms|lb|cb|pb|gb) (?:[^<\n]+?)\s*)=>    # Paragraph mark end
+        )\s*""",
+        flags = re.VERBOSE
+    )
 
     def _find_first_mark(self, line):
         open_match = self.RE_OPEN.search(line)

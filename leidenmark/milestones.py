@@ -4,7 +4,7 @@ from xml.etree import ElementTree as etree
 from markdown.inlinepatterns import InlineProcessor
 
 
-RE_MIL = fr'<=\.(ms|lb|cb|pb|gb) ([^\n]+?)\s*=>'
+RE_MIL = fr'<=\.(ms|lb|cb|pb|gb) ([^<\n]+?)\s*=>'
 
 class MilestoneProcessor(InlineProcessor):
 
