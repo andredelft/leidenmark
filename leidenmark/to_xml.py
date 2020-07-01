@@ -2,30 +2,77 @@ from markdown.postprocessors import Postprocessor
 from lxml import etree
 import re
 
-class TEIPostprocesor(Postprocessor):
+class TEIPostprocessor(Postprocessor):
+
+    def _replace_tag(self, old_tag, new_tag, **kwargs):
+        for el in self.tree.xpath(f'//{old_tag}'):
+            el.tag = new_tag
+            el.attrib.update(kwargs)
 
     def run(self, text):
         root_tag = 'root'
         indent_unit = '  '
 
-        tree = etree.fromstring(f'<{root_tag}>{text}</{root_tag}>')
+        self.tree = etree.fromstring(f'<{root_tag}>{text}</{root_tag}>')
 
-        # Replace some html:
-        for el in tree.xpath('//em'):
-            el.tag = 'hi'
-            el.attrib['rend'] = 'italic'
+        # heads (from old script, not sure if this is actually encountered, AvD)
+        for el in self.tree.xpath('//head'):
+            el.tag = 'p'
+            head = etree.SubElement(el, 'seg')
+            head.attrib['type'] = 'head'
 
-        for el in tree.xpath('//strong'):
-            el.tag = 'hi'
-            el.attrib['rend'] = 'bold'
+            # Move content of over to <seg>
+            head.text = el.text
+            el.text = ''
+            for child in el.getchildren():
+                head.append(child)
 
-        for el in tree.xpath('//h1'):
-            el.tag = 'head'
+        # tables
+        for table in self.tree.xpath('//table'):
+            new_table = etree.Element('table')
 
-        etree.indent(tree, space = indent_unit)
+            if table.xpath('thead'):
+                row = etree.SubElement(new_table, 'row')
+                row.attrib['role'] = 'label'
+                for cell in table.xpath('thead/tr/th'):
+                    cell.tag = 'cell'
+                    row.append(cell)
 
-        new_text = etree.tostring(tree, encoding = 'unicode')
+            for table_row in table.xpath('*[not(self::thead)]/tr'):
+                row = etree.SubElement(new_table, 'row')
+                for cell in table_row.xpath('td'):
+                    cell.tag = 'cell'
+                    row.append(cell)
+
+            new_table.tail = table.tail
+
+            container = table.getparent()
+            container.insert(container.index(table) + 1, new_table)
+            del container[container.index(table)]
+
+        self._replace_tag('em', 'hi', rend = 'italic')
+        self._replace_tag('i', 'hi', rend = 'italic')
+        self._replace_tag('strong', 'hi', rend = 'bold')
+        self._replace_tag('b', 'hi', rend = 'bold')
+        self._replace_tag('sup', 'hi', rend = 'superscript')
+        self._replace_tag('small', 'hi', rend = 'smallcaps')
+        for i in range(1, 7):
+            self._replace_tag(f'h{i}', 'head')
+        self._replace_tag('br', 'lb')
+        self._replace_tag('ol', 'list')
+        self._replace_tag('ul', 'list')
+        self._replace_tag('li', 'item')
+        self._replace_tag('blockquote', 'quote')
+        for el in self.tree.xpath('//a'):
+            el.tag = 'ref'
+            target = el.attrib.pop('href', '')
+            if target:
+                el.attrib['target'] = target
+
+        # etree.indent(self.tree, space = indent_unit)
+
+        new_text = etree.tostring(self.tree, encoding = 'unicode')
         # Remove wrapped root element and remove one level of indentation
-        new_text = re.sub(rf'</?{root_tag}>\s*|(?<=\n){indent_unit}', '', new_text)
+        new_text = re.sub(rf'^\s*<{root_tag}>|</{root_tag}>\s*$', '', new_text)
 
         return new_text

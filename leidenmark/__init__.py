@@ -5,7 +5,7 @@ from .divisions import DivisionsPreproc, DivisionMarkProcessor, DivisionMarkTree
 from .line_nums import LineNumsPreproc, NumberedBlocksProcessor
 from .milestones import RE_MIL, MilestoneProcessor
 from .gaps_spaces import RE_SPACE, SpaceProcessor, RE_LINE_GAP, LineGapProcessor, RE_CHARACTER_GAP, CharacterGapProcessor
-from .to_xml import TEIPostprocesor
+from .to_xml import TEIPostprocessor
 from .misc import HetaProcessor, RE_HETA
 from .exceptions import LeidenPlusSyntaxError
 
@@ -14,18 +14,21 @@ class LeidenPlus(Extension):
 
     def __init__(self, **kwargs):
         self.config = {
-            'strict' : [False, 'Toggle strict mode (omit all Markdown specific conventions)']
+            'strict' : [False, 'Toggle strict mode (omit all Markdown specific conventions)'],
+            'enable_paragraphs': [False, '']
         }
-        super(LeidenPlus, self).__init__(**kwargs)
+        Extension.__init__(self, **kwargs)
 
     def extendMarkdown(self, md):
         configs = self.getConfigs()
 
-        md.parser.blockprocessors.deregister('paragraph')
         md.parser.blockprocessors.deregister('olist')
         if configs['strict']:
             md.inlinePatterns.deregister('em_strong')
             md.inlinePatterns.deregister('em_strong2')
+
+        md.parser.blockprocessors.deregister('paragraph')
+        md.parser.blockprocessors.register(TrivialProcessor(md.parser), 'fallback', 0)
 
         md.preprocessors.register(DivisionsPreproc(md), 'divison_preproc', 120)
         md.preprocessors.register(LineNumsPreproc(md), 'linenums_preproc', 119)
@@ -38,7 +41,7 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_GAP, md), 'character_gaps', 117)
         md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor
         md.treeprocessors.register(DivisionMarkTreeproc(md), 'divison_treeproc', 120)
-        md.postprocessors.register(TEIPostprocesor(md), 'to_xml', 0)
+        md.postprocessors.register(TEIPostprocessor(md), 'to_epidoc', 0)
 
 
 class LeidenEscape(Extension):
