@@ -4,6 +4,11 @@ import re
 
 class TEIPostprocessor(Postprocessor):
 
+    def __init__(self, md, indent, with_root):
+        self.indent = indent
+        self.with_root = with_root
+        Postprocessor.__init__(self, md)
+
     def _replace_tag(self, old_tag, new_tag, **kwargs):
         for el in self.tree.xpath(f'//{old_tag}'):
             el.tag = new_tag
@@ -11,7 +16,6 @@ class TEIPostprocessor(Postprocessor):
 
     def run(self, text):
         root_tag = 'root'
-        indent_unit = '  '
 
         self.tree = etree.fromstring(f'<{root_tag}>{text}</{root_tag}>')
 
@@ -69,10 +73,13 @@ class TEIPostprocessor(Postprocessor):
             if target:
                 el.attrib['target'] = target
 
-        # etree.indent(self.tree, space = indent_unit)
+        if self.indent:
+            etree.indent(self.tree)
 
         new_text = etree.tostring(self.tree, encoding = 'unicode')
-        # Remove wrapped root element and remove one level of indentation
-        new_text = re.sub(rf'^\s*<{root_tag}>|</{root_tag}>\s*$', '', new_text)
+
+        if not self.with_root:
+            # Remove wrapped root element
+            new_text = re.sub(rf'^\s*<{root_tag}>|</{root_tag}>\s*$', '', new_text)
 
         return new_text

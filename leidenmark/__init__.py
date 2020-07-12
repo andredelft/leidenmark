@@ -15,7 +15,9 @@ class LeidenPlus(Extension):
     def __init__(self, **kwargs):
         self.config = {
             'strict' : [False, 'Toggle strict mode (omit all Markdown specific conventions)'],
-            'enable_paragraphs': [False, '']
+            'enable_paragraphs': [False, ''],
+            'indent': [False, ''],
+            'with_root': [False, '']
         }
         Extension.__init__(self, **kwargs)
 
@@ -41,20 +43,14 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_GAP, md), 'character_gaps', 117)
         md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor
         md.treeprocessors.register(DivisionMarkTreeproc(md), 'divison_treeproc', 120)
-        md.postprocessors.register(TEIPostprocessor(md), 'to_epidoc', 0)
+        md.postprocessors.register(TEIPostprocessor(md, configs['indent'], configs['with_root']), 'to_epidoc', 0)
 
 
 class LeidenEscape(Extension):
 
     def extendMarkdown(self, md):
-        md.postprocessors.register(TEIPostprocesor(md), 'to_xml', 0)
+        md.postprocessors.register(TEIPostprocessor(md), 'to_xml', 0)
 
-# TODO: Create Leiden+ escape possibility that works with inline escapes `<= Some content =>`{.leiden+} or blocks:
-# ```leiden+
-# <=
-# Some content
-# =>
-# ```
 
 def leiden_plus(content, **kwargs):
     return markdown(content, extensions = [LeidenPlus(**kwargs)])
