@@ -4,7 +4,7 @@ import re
 
 class TEIPostprocessor(Postprocessor):
 
-    def __init__(self, md, indent, with_root):
+    def __init__(self, md, indent = False, with_root = False):
         self.indent = indent
         self.with_root = with_root
         Postprocessor.__init__(self, md)

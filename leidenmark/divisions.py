@@ -11,7 +11,7 @@ class DivisionsPreproc(Preprocessor):
 
     RE_OPEN = re.compile(r"""
         (?:
-          <D=\.(\S+?)\.([a-z]+)         # Division mark <D=.number.divisontype ... =D>
+          <D=\.(\S+?)(?:\.([a-z]+))?    # Division mark <D=.number.divisontype ... =D>
           |<D=\.(r|v|le)                # Division mark (recto, versa, left edge)
           |(<=)(?!\.(?:ms|lb|cb|pb|gb)) # Paragraph mark <= ... => (Check if it is not a milestone)
         )\s*""",
@@ -59,8 +59,10 @@ class DivisionsPreproc(Preprocessor):
                     elif ab:
                         in_ab = True
                         new_line = f'{{AB-OPEN id={div_counter}}}'
-                    else:
+                    elif div_type:
                         new_line = f'{{DIV-OPEN id={div_counter} subtype={div_type} n={n}}}'
+                    else:
+                        new_line = f'{{DIV-OPEN id={div_counter} n={n}}}'
                     new_lines += [
                         '', new_line, ''
                     ]
@@ -78,7 +80,7 @@ class DivisionsPreproc(Preprocessor):
                         i_start = i - 3 if i >= 3 else 0
                         traceback = '\n'.join(lines[i_start:i+1])
                         raise LeidenPlusSyntaxError(
-                            f"Text has a '={div}>' too many, traceback:\n\n{traceback}"
+                            f"Text has a '={D if div else ''}>' too many, traceback:\n\n{traceback}"
                         )
                     else:
                         del div_ids[-1]

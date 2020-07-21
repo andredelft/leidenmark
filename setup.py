@@ -5,10 +5,10 @@ with open('README.md') as f:
 
 setup(
     name = 'leidenmark',
-    version = '0.1.7',
+    version = '0.1.9',
     description = 'A markdown extension for converting Leiden+ epigraphic text to TEI Epidoc XML',
     packages = find_packages(),
-    install_requires = ['markdown', 'lxml>=4.5'],
+    install_requires = ['markdown', 'lxml>=4.5', 'regex'],
     keywords = 'Leiden+ Markdown TEI Epidoc XML HTML',
     long_description = long_description,
     long_description_content_type = 'text/markdown',
