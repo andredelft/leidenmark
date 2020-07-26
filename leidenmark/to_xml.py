@@ -2,6 +2,7 @@ from markdown.postprocessors import Postprocessor
 from lxml import etree
 import re
 
+
 class TEIPostprocessor(Postprocessor):
 
     def __init__(self, md, indent = False, with_root = False):

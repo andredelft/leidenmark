@@ -3,6 +3,7 @@ from xml.etree import ElementTree as etree
 
 RE_HETA = r'(?:[_*]\u0323?)(h\u0323?)(?:[_*]\u0323?)'
 
+
 class HetaProcessor(InlineProcessor):
 
     def handleMatch(self, m, data):

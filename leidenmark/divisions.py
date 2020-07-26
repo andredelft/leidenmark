@@ -7,13 +7,13 @@ from markdown.treeprocessors import Treeprocessor
 
 from .exceptions import LeidenPlusSyntaxError
 
+
 class DivisionsPreproc(Preprocessor):
 
     RE_OPEN = re.compile(r"""
         (?:
-          <D=\.(\S+?)(?:\.([a-z]+))?    # Division mark <D=.number.divisontype ... =D>
-          |<D=\.(r|v|le)                # Division mark (recto, versa, left edge)
-          |(<=)(?!\.(?:ms|lb|cb|pb|gb)) # Paragraph mark <= ... => (Check if it is not a milestone)
+          <D=\.(\w+)(?:\.(\w+))?          # Division mark <D=.number(.divisontype)? ... =D>
+          |(<=)(?!\.(?:ms|lb|cb|pb|gb))   # Paragraph mark <= ... => (Check if it is not a milestone)
         )\s*""",
         flags = re.VERBOSE
     )
@@ -53,19 +53,15 @@ class DivisionsPreproc(Preprocessor):
                 if mark_type == 'o':
                     if in_ab:
                         raise LeidenPlusSyntaxError('<= ... => cannot be nested')
-                    n, div_type, rv, ab = match.groups()
-                    if rv:
-                        new_line = f'{{DIV-OPEN id={div_counter} n={rv}}}'
-                    elif ab:
+                    n, div_type, ab = match.groups()
+                    if ab:
                         in_ab = True
                         new_line = f'{{AB-OPEN id={div_counter}}}'
                     elif div_type:
                         new_line = f'{{DIV-OPEN id={div_counter} subtype={div_type} n={n}}}'
                     else:
                         new_line = f'{{DIV-OPEN id={div_counter} n={n}}}'
-                    new_lines += [
-                        '', new_line, ''
-                    ]
+                    new_lines += ['', new_line, '']
                     div_ids.append(div_counter)
                     div_counter += 1
                 elif mark_type == 'c':
@@ -77,11 +73,7 @@ class DivisionsPreproc(Preprocessor):
                     try:
                         new_lines += ['', f'{{{"DIV" if div else "AB"}-CLOSE id={div_ids[-1]}}}', '']
                     except IndexError:
-                        i_start = i - 3 if i >= 3 else 0
-                        traceback = '\n'.join(lines[i_start:i+1])
-                        raise LeidenPlusSyntaxError(
-                            f"Text has a '={D if div else ''}>' too many, traceback:\n\n{traceback}"
-                        )
+                        raise LeidenPlusSyntaxError(f'Text has a ={"D" if div else ""}> too many')
                     else:
                         del div_ids[-1]
                         if not div:
@@ -94,6 +86,7 @@ class DivisionsPreproc(Preprocessor):
                 "Text ended while some Leiden+ division marks have not been closed"
             )
         return new_lines
+
 
 class DivisionMarkProcessor(BlockProcessor):
 
@@ -140,6 +133,7 @@ class DivisionMarkTreeproc(Treeprocessor):
                     el_open.attrib['type'] = 'textpart'
                 del root[root.getchildren().index(el_close)]
                 el_close = root.find(f'./{tag}-CLOSE')
+
 
 class TrivialProcessor(BlockProcessor):
     """ Fallback alternative to the ParagraphProcessor. """
