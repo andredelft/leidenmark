@@ -60,6 +60,7 @@ class TEIPostprocessor(Postprocessor):
         self._replace_tag('strong', 'hi', rend = 'bold')
         self._replace_tag('b', 'hi', rend = 'bold')
         self._replace_tag('sup', 'hi', rend = 'superscript')
+        self._replace_tag('sub', 'hi', rend = 'subscript')
         self._replace_tag('small', 'hi', rend = 'smallcaps')
         for i in range(1, 7):
             self._replace_tag(f'h{i}', 'head')

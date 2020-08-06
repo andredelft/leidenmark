@@ -13,6 +13,7 @@ RE_CHARACTER_GAP = fr'\[{CA}\.{NUM}\]'
 RE_LINE_GAP      = fr'lost\.{CA_DOT}{NUM}lin'
 RE_SPACE         = fr'vac\.{CA_DOT}{NUM}{LINE}'
 
+RE_SUPPLIED = r'\[(.+?)\]'
 
 def _handle_ca(ca, el):
     if ca:
@@ -59,4 +60,13 @@ class SpaceProcessor(InlineProcessor):
         _handle_num(num, el)
         el.set('unit', 'line' if lin else 'character')
         _handle_ca(ca, el)
+        return el, m.start(), m.end()
+
+
+class SuppliedProcessor(InlineProcessor):
+
+    def handleMatch(self, m, data):
+        el = etree.Element('supplied')
+        el.set('reason', 'lost')
+        el.text = m.group(1)
         return el, m.start(), m.end()

@@ -4,7 +4,12 @@ from markdown import markdown
 from .divisions import DivisionsPreproc, DivisionMarkProcessor, DivisionMarkTreeproc, TrivialProcessor
 from .line_nums import LineNumsPreproc, NumberedBlocksProcessor
 from .milestones import RE_MIL, MilestoneProcessor
-from .gaps_spaces import RE_SPACE, SpaceProcessor, RE_LINE_GAP, LineGapProcessor, RE_CHARACTER_GAP, CharacterGapProcessor
+from .gaps_spaces import (
+    RE_SPACE, SpaceProcessor,
+    RE_LINE_GAP, LineGapProcessor,
+    RE_CHARACTER_GAP, CharacterGapProcessor,
+    RE_SUPPLIED, SuppliedProcessor
+)
 from .to_xml import TEIPostprocessor
 from .misc import HetaProcessor, RE_HETA
 from .exceptions import LeidenPlusSyntaxError
@@ -41,6 +46,7 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(SpaceProcessor(RE_SPACE, md), 'spaces', 119)
         md.inlinePatterns.register(LineGapProcessor(RE_LINE_GAP, md), 'line_gaps', 118)
         md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_GAP, md), 'character_gaps', 117)
+        md.inlinePatterns.register(SuppliedProcessor(RE_SUPPLIED, md), 'supplied', 5)
         md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor
         md.treeprocessors.register(DivisionMarkTreeproc(md), 'divison_treeproc', 120)
         md.postprocessors.register(TEIPostprocessor(md, configs['indent'], configs['with_root']), 'to_epidoc', 0)
