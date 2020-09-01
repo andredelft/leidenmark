@@ -7,7 +7,7 @@ from markdown.blockprocessors import BlockProcessor
 
 class LineNumsPreproc(Preprocessor):
 
-    RE_LINE = re.compile(r'^([0-9]+[a-z]?´?(?:[–-/][0-9]*[a-z]?)?)\.(-?)\s*(.*?)(?<!\s)\s*$')
+    RE_LINE = re.compile(r'^([0-9]+[a-z]?´?(?:[–\-/][0-9]*[a-z]?)?)\.(-?)\s*(.*?)(?<!\s)\s*$')
 
     def run(self, lines):
         new_lines = []
