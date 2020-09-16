@@ -4,10 +4,11 @@ from xml.etree import ElementTree as etree
 from markdown.preprocessors import Preprocessor
 from markdown.blockprocessors import BlockProcessor
 
+LINE_NUM = r'([0-9]+[a-z]?´?(?:[–\-/][0-9]*[a-z]?)?)\.(-?)'
 
 class LineNumsPreproc(Preprocessor):
 
-    RE_LINE = re.compile(r'^([0-9]+[a-z]?´?(?:[–\-/][0-9]*[a-z]?)?)\.(-?)\s*(.*?)(?<!\s)\s*$')
+    RE_LINE = re.compile(fr'^{LINE_NUM}\s*(.*?)(?<!\s)\s*$')
 
     def run(self, lines):
         new_lines = []

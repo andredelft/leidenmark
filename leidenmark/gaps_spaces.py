@@ -1,8 +1,10 @@
 import re
 from xml.etree import ElementTree as etree
 
+from markdown.preprocessors import Preprocessor
 from markdown.inlinepatterns import InlineProcessor
 
+from .line_nums import LINE_NUM
 
 CA_DOT  = r'((?:ca\.)?)'
 CA      = r'((?:ca)?)'
@@ -13,7 +15,7 @@ RE_CHARACTER_GAP = fr'\[{CA}\.{NUM}\]'
 RE_LINE_GAP      = fr'lost\.{CA_DOT}{NUM}lin'
 RE_SPACE         = fr'vac\.{CA_DOT}{NUM}{LINE}'
 
-RE_SUPPLIED = r'\[(.+?)\]'
+RE_SUPPLIED = r'\[([^\[\]\n]*?)\]'
 
 def _handle_ca(ca, el):
     if ca:
@@ -28,6 +30,23 @@ def _handle_num(num, el):
         el.set('atMost', str(max(num_range)))
     else:
         el.set('quantity', num)
+
+
+class CompleteSquareBrackets(Preprocessor):
+
+    RE_START = re.compile(fr'^(?P<start>(?:{LINE_NUM})?\s*)(?P<end>[^\[\]\n]*?\])')
+    RE_END = re.compile(r'(?P<start>\[[^\[\]\n]*?)(?<!\s)\s*$')
+
+    def run(self, lines):
+        new_lines = []
+
+        for line in lines:
+            line = self.RE_START.sub('\g<start>[\g<end>', line)
+            line = self.RE_END.sub('\g<start>]', line)
+            line = line.replace('[]', '[.?]')
+            new_lines.append(line)
+
+        return new_lines
 
 
 class CharacterGapProcessor(InlineProcessor):

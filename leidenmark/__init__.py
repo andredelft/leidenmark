@@ -5,6 +5,7 @@ from .divisions import DivisionsPreproc, DivisionMarkProcessor, DivisionMarkTree
 from .line_nums import LineNumsPreproc, NumberedBlocksProcessor
 from .milestones import RE_MIL, MilestoneProcessor
 from .gaps_spaces import (
+    CompleteSquareBrackets,
     RE_SPACE, SpaceProcessor,
     RE_LINE_GAP, LineGapProcessor,
     RE_CHARACTER_GAP, CharacterGapProcessor,
@@ -38,7 +39,8 @@ class LeidenPlus(Extension):
         md.parser.blockprocessors.register(TrivialProcessor(md.parser), 'fallback', 0)
 
         md.preprocessors.register(DivisionsPreproc(md), 'divison_preproc', 120)
-        md.preprocessors.register(LineNumsPreproc(md), 'linenums_preproc', 119)
+        md.preprocessors.register(CompleteSquareBrackets(md), 'complete_square_brackets', 119)
+        md.preprocessors.register(LineNumsPreproc(md), 'linenums_preproc', 118)
         md.parser.blockprocessors.register(NumberedBlocksProcessor(md.parser), 'lineblocks', 120)
         md.parser.blockprocessors.register(DivisionMarkProcessor(md.parser), 'divison_marks', 119)
         md.parser.blockprocessors.register(TrivialProcessor(md.parser), 'fallback', 0)
