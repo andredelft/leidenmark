@@ -41,9 +41,16 @@ class CompleteSquareBrackets(Preprocessor):
         new_lines = []
 
         for line in lines:
-            line = self.RE_START.sub('\g<start>[\g<end>', line)
-            line = self.RE_END.sub('\g<start>]', line)
-            line = line.replace('[]', '[.?]')
+            line = self.RE_START.sub(
+                lambda m: f'{m.group("start")}[.?]' if m.group('end') == ']'
+                else f'{m.group("start")}[{m.group("end")}',
+                line
+            )
+            line = self.RE_END.sub(
+                lambda m: '[.?]' if m.group() == '['
+                else f'{m.group("start")}]',
+                line
+            )
             new_lines.append(line)
 
         return new_lines
