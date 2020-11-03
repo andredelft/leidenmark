@@ -120,8 +120,8 @@ class DivisionMarkTreeproc(Treeprocessor):
                 if el_open.tail:
                     el_open.text = el_open.tail
                     el_open.tail = None
-                i_open = root.getchildren().index(el_open)
-                i_close = root.getchildren().index(el_close)
+                i_open = list(root).index(el_open)
+                i_close = list(root).index(el_close)
                 for _ in range(i_open + 1, i_close):
                     # We don't have to increase the index since it shifts
                     # automatically when elements are deleted
@@ -131,7 +131,7 @@ class DivisionMarkTreeproc(Treeprocessor):
                 el_open.attrib.pop('id')
                 if tag == 'DIV':
                     el_open.attrib['type'] = 'textpart'
-                del root[root.getchildren().index(el_close)]
+                del root[list(root).index(el_close)]
                 el_close = root.find(f'./{tag}-CLOSE')
 
 
@@ -144,7 +144,7 @@ class TrivialProcessor(BlockProcessor):
     def run(self, parent, blocks):
         block = blocks.pop(0)
         content = block
-        children = parent.getchildren()
+        children = list(parent)
         if len(children) == 0:
             if parent.text:
                 parent.text += content

@@ -11,6 +11,7 @@ from .gaps_spaces import (
     RE_CHARACTER_GAP, CharacterGapProcessor,
     RE_SUPPLIED, SuppliedProcessor
 )
+from .foreign import RE_FOREIGN, ForeignProcessor
 from .to_xml import TEIPostprocessor
 from .misc import HetaProcessor, RE_HETA
 from .exceptions import LeidenPlusSyntaxError
@@ -48,6 +49,7 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(SpaceProcessor(RE_SPACE, md), 'spaces', 119)
         md.inlinePatterns.register(LineGapProcessor(RE_LINE_GAP, md), 'line_gaps', 118)
         md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_GAP, md), 'character_gaps', 117)
+        md.inlinePatterns.register(ForeignProcessor(RE_FOREIGN, md), 'foreign', 116)
         md.inlinePatterns.register(SuppliedProcessor(RE_SUPPLIED, md), 'supplied', 5)
         md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor
         md.treeprocessors.register(DivisionMarkTreeproc(md), 'divison_treeproc', 120)
