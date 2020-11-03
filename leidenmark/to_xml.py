@@ -5,7 +5,7 @@ import re
 
 class TEIPostprocessor(Postprocessor):
 
-    def __init__(self, md, indent = False, with_root = False):
+    def __init__(self, md, indent=False, with_root=False):
         self.indent = indent
         self.with_root = with_root
         Postprocessor.__init__(self, md)
@@ -15,7 +15,7 @@ class TEIPostprocessor(Postprocessor):
             el.tag = new_tag
             el.attrib.update(kwargs)
 
-    def run(self, text):
+    def run(self, text, indent_unit='  '):
         root_tag = 'root'
 
         self.tree = etree.fromstring(f'<{root_tag}>{text}</{root_tag}>')
@@ -55,13 +55,13 @@ class TEIPostprocessor(Postprocessor):
             container.insert(container.index(table) + 1, new_table)
             del container[container.index(table)]
 
-        self._replace_tag('em', 'hi', rend = 'italic')
-        self._replace_tag('i', 'hi', rend = 'italic')
-        self._replace_tag('strong', 'hi', rend = 'bold')
-        self._replace_tag('b', 'hi', rend = 'bold')
-        self._replace_tag('sup', 'hi', rend = 'superscript')
-        self._replace_tag('sub', 'hi', rend = 'subscript')
-        self._replace_tag('small', 'hi', rend = 'smallcaps')
+        self._replace_tag('em', 'hi', rend='italic')
+        self._replace_tag('i', 'hi', rend='italic')
+        self._replace_tag('strong', 'hi', rend='bold')
+        self._replace_tag('b', 'hi', rend='bold')
+        self._replace_tag('sup', 'hi', rend='superscript')
+        self._replace_tag('sub', 'hi', rend='subscript')
+        self._replace_tag('small', 'hi', rend='smallcaps')
         for i in range(1, 7):
             self._replace_tag(f'h{i}', 'head')
         self._replace_tag('br', 'lb')
@@ -76,12 +76,14 @@ class TEIPostprocessor(Postprocessor):
                 el.attrib['target'] = target
 
         if self.indent:
-            etree.indent(self.tree)
+            etree.indent(self.tree, space=indent_unit)
 
-        new_text = etree.tostring(self.tree, encoding = 'unicode')
+        new_text = etree.tostring(self.tree, encoding='unicode')
 
         if not self.with_root:
             # Remove wrapped root element
             new_text = re.sub(rf'^\s*<{root_tag}>|</{root_tag}>\s*$', '', new_text)
+            if self.indent:
+                new_text = new_text.replace('\n' + indent_unit, '\n')
 
         return new_text

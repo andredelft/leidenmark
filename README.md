@@ -20,7 +20,7 @@ lost.2lin
 6. ut labore et dol
 7.-ore magna aliqua
 =>=D>"""
->>> leiden_plus(content)
+>>> leiden_plus(content, indent=True)
 ```
 
 The output of the above lines is the following XML snippet:
@@ -48,7 +48,7 @@ This extension can also be used in combination with other markdown extensions by
 ```python
 >>> from markdown import markdown
 >>> from leidenmark import LeidenPlus
->>> markdown(content, extensions = [LeidenPlus()]) # Other extensions can be added to this list
+>>> markdown(content, extensions=[LeidenPlus()]) # Other extensions can be added to this list
 ```
 
 ## Configuration

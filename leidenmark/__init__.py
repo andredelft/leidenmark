@@ -63,7 +63,10 @@ class LeidenEscape(Extension):
 
 
 def leiden_plus(content, **kwargs):
-    return markdown(content, extensions = [LeidenPlus(**kwargs)])
+    extensions = [LeidenPlus(**kwargs)]
+    if not kwargs.get('strict', False):
+        extensions.append('tables')
+    return markdown(content, extensions=extensions)
 
 def leiden_escape(content, **kwargs):
-    return markdown(content, extensions = [LeidenEscape(**kwargs)])
+    return markdown(content, extensions = [LeidenEscape(**kwargs), 'tables'])
