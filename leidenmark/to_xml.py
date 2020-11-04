@@ -18,6 +18,9 @@ class TEIPostprocessor(Postprocessor):
     def run(self, text, indent_unit='  '):
         root_tag = 'root'
 
+        # A dirty namespace hack
+        text = text.replace('{http://www.w3.org/XML/1998/namespace}', 'xml:')
+
         self.tree = etree.fromstring(f'<{root_tag}>{text}</{root_tag}>')
 
         # heads (from old script, not sure if this is actually encountered, AvD)
