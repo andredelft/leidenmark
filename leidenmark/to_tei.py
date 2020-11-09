@@ -21,9 +21,9 @@ class TEIPostprocessor(Postprocessor):
                 else:
                     new_attrib[key] = value
 
-            if clear_attribs:
+            if clear_attrib:
                 el.attrib = {}
-            el.attrib.update(kwargs)
+            el.attrib.update(new_attrib)
 
     def run(self, text, indent_unit='  '):
         root_tag = 'root'
@@ -83,7 +83,7 @@ class TEIPostprocessor(Postprocessor):
         self._replace_tag('li', 'item')
         self._replace_tag('blockquote', 'quote')
         self._replace_tag('a', 'ref', target='@href')
-        self._replace_tag('img', 'graphic', n='@alt', src='@url')
+        self._replace_tag('img', 'graphic', n='@alt', url='@src')
 
         if self.indent:
             etree.indent(self.tree, space=indent_unit)
