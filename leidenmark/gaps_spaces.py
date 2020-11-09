@@ -8,7 +8,7 @@ from .line_nums import LINE_NUM
 
 CA_DOT  = r'((?:ca\.)?)'
 CA      = r'((?:ca)?)'
-NUM     = r'(\d+(?:-\d+)?|\?)?'
+NUM     = r'(\d+(?:-\d+)?|\?|)'
 LINE    = r'((?:lin)?)'
 
 RE_CHARACTER_GAP = fr'\[{CA}\.{NUM}\]'
