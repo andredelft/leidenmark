@@ -8,7 +8,7 @@ from .line_nums import LINE_NUM
 
 CA_DOT  = r'((?:ca\.)?)'
 CA      = r'((?:ca)?)'
-NUM     = r'(\d+(?:-\d+)?|\?)'
+NUM     = r'(\d+(?:-\d+)?|\?)?'
 LINE    = r'((?:lin)?)'
 
 RE_CHARACTER_GAP = fr'\[{CA}\.{NUM}\]'
@@ -29,7 +29,7 @@ def _handle_num(num, el):
         el.set('atLeast', str(min(num_range)))
         el.set('atMost', str(max(num_range)))
     else:
-        el.set('quantity', num)
+        el.set('quantity', num if num else 1)
 
 
 class CompleteSquareBrackets(Preprocessor):
