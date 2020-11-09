@@ -29,7 +29,7 @@ def _handle_num(num, el):
         el.set('atLeast', str(min(num_range)))
         el.set('atMost', str(max(num_range)))
     else:
-        el.set('quantity', num if num else 1)
+        el.set('quantity', num if num else '1')
 
 
 class CompleteSquareBrackets(Preprocessor):
