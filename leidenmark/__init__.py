@@ -12,7 +12,7 @@ from .gaps_spaces import (
     RE_SUPPLIED, SuppliedProcessor
 )
 from .foreign import RE_FOREIGN, ForeignProcessor
-from .to_xml import TEIPostprocessor
+from .to_tei import TEIPostprocessor
 from .misc import HetaProcessor, RE_HETA
 from .exceptions import LeidenPlusSyntaxError
 

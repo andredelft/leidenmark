@@ -10,9 +10,19 @@ class TEIPostprocessor(Postprocessor):
         self.with_root = with_root
         Postprocessor.__init__(self, md)
 
-    def _replace_tag(self, old_tag, new_tag, **kwargs):
+    def _replace_tag(self, old_tag, new_tag, clear_attrib=False, **attribs):
         for el in self.tree.xpath(f'//{old_tag}'):
             el.tag = new_tag
+
+            new_attrib = {}
+            for key, value in attribs.items():
+                if value.startswith('@'):
+                    new_attrib[key] = el.attrib.pop(value[1:], '')
+                else:
+                    new_attrib[key] = value
+
+            if clear_attribs:
+                el.attrib = {}
             el.attrib.update(kwargs)
 
     def run(self, text, indent_unit='  '):
@@ -72,11 +82,8 @@ class TEIPostprocessor(Postprocessor):
         self._replace_tag('ul', 'list')
         self._replace_tag('li', 'item')
         self._replace_tag('blockquote', 'quote')
-        for el in self.tree.xpath('//a'):
-            el.tag = 'ref'
-            target = el.attrib.pop('href', '')
-            if target:
-                el.attrib['target'] = target
+        self._replace_tag('a', 'ref', target='@href')
+        self._replace_tag('img', 'graphic', n='@alt', src='@url')
 
         if self.indent:
             etree.indent(self.tree, space=indent_unit)
