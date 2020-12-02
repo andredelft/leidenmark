@@ -135,6 +135,37 @@ class DivisionMarkTreeproc(Treeprocessor):
                 el_close = root.find(f'./{tag}-CLOSE')
 
 
+class ColumnContainerTreeproc(Treeprocessor):
+    """ Wrap column-like divisions in a <seg type="columns"/> container """
+
+    def _is(self, tag_name, el):
+        return el.tag == 'div' and el.attrib.get('type') == 'textpart' and el.attrib.get('subtype') == tag_name
+
+    def insert_containers(self, root, tag_name, seg_attribs={}):
+        # Select all parents of columns
+        for parent in root.findall(f'.//div[@subtype="{tag_name}"]/..'):
+            for i in range(len(root)):
+                try:
+                    el = parent[i]
+                except IndexError:
+                    break
+                else:
+                    if self._is(tag_name, el):
+                        col_container = etree.Element('seg', type='columns', **seg_attribs)
+                        parent.insert(i, col_container)
+                        while self._is(tag_name, el):
+                            col_container.append(el)
+                            parent.remove(el)
+                            try:
+                                el = parent[i + 1]
+                            except IndexError:
+                                break
+
+    def run(self, root):
+        self.insert_containers(root, 'column')
+        self.insert_containers(root, 'tab', seg_attribs={'rend': 'hide-labels'})
+
+
 class TrivialProcessor(BlockProcessor):
     """ Fallback alternative to the ParagraphProcessor. """
 
