@@ -4,6 +4,7 @@ from xml.etree import ElementTree as etree
 from markdown.preprocessors import Preprocessor
 from markdown.blockprocessors import BlockProcessor
 from markdown.treeprocessors import Treeprocessor
+from markdown.postprocessors import Postprocessor
 
 from .exceptions import LeidenPlusSyntaxError
 
@@ -166,6 +167,8 @@ class ColumnContainerTreeproc(Treeprocessor):
         self.insert_containers(root, 'tab', seg_attribs={'rend': 'hide-labels'})
 
 
+THROWAWAY_TAG = 'throwaway-p'
+
 class TrivialProcessor(BlockProcessor):
     """ Fallback alternative to the ParagraphProcessor. """
 
@@ -174,16 +177,15 @@ class TrivialProcessor(BlockProcessor):
 
     def run(self, parent, blocks):
         block = blocks.pop(0)
-        content = block
-        children = list(parent)
-        if len(children) == 0:
-            if parent.text:
-                parent.text += content
-            else:
-                parent.text = content
-        else:
-            last_child = children[-1]
-            if last_child.tail:
-                last_child.tail += content
-            else:
-                last_child.tail = content
+        if block.strip():
+            # In order for inlineprocessors to work, we have to wrap the content in
+            # at least one element. Therefore we create this throwaway which we filter
+            # in post-processing.
+            p = etree.SubElement(parent, THROWAWAY_TAG)
+            p.text = block.lstrip()
+
+
+class RemoveThrowaway(Postprocessor):
+    """ Remove throwaway that TrivialProcessor creates """
+    def run(self, text):
+        return re.sub(f'\s*\<\s*/?\s*{THROWAWAY_TAG}\s*/?\s*\>\s*', '', text)

@@ -3,7 +3,14 @@ from markdown import markdown
 
 from dh_utils.tei.markdown import TEIPostprocessor
 
-from .divisions import DivisionsPreproc, DivisionMarkProcessor, DivisionMarkTreeproc, ColumnContainerTreeproc, TrivialProcessor
+from .divisions import (
+    DivisionsPreproc,
+    DivisionMarkProcessor,
+    DivisionMarkTreeproc,
+    ColumnContainerTreeproc,
+    TrivialProcessor,
+    RemoveThrowaway
+)
 from .line_nums import LineNumsPreproc, NumberedBlocksProcessor
 from .milestones import RE_MIL, MilestoneProcessor
 from .gaps_spaces import (
@@ -55,7 +62,7 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor
         md.treeprocessors.register(DivisionMarkTreeproc(md), 'divison_treeproc', 120)
         md.treeprocessors.register(ColumnContainerTreeproc(md), 'col_container', 119)
-
+        md.postprocessors.register(RemoveThrowaway(md), 'remove_throwaway', 1)
         md.postprocessors.register(TEIPostprocessor(md, configs['indent'], configs['with_root']), 'to_epidoc', 0)
 
 
