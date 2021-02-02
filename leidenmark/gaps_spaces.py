@@ -13,7 +13,7 @@ LINE    = r'((?:lin)?)'
 
 RE_CHARACTER_GAP = fr'\[{CA}\.{NUM}\]'
 RE_LINE_GAP      = fr'lost\.{CA_DOT}{NUM}lin'
-RE_SPACE         = fr'vac\.{CA_DOT}{NUM}{LINE}'
+RE_SPACE         = fr'vac\.{CA_DOT}{NUM}([a-zA-Z]*)'
 
 RE_SUPPLIED = r'\[([^\[\]\n]*?)\]'
 
@@ -81,10 +81,14 @@ class LineGapProcessor(InlineProcessor):
 class SpaceProcessor(InlineProcessor):
 
     def handleMatch(self, m, data):
-        ca, num, lin = m.groups()
+        ca, num, unit = m.groups()
         el = etree.Element('space')
         _handle_num(num, el)
-        el.set('unit', 'line' if lin else 'character')
+        if unit == 'lin':
+            unit = 'line'
+        elif not unit:
+            unit = 'character'
+        el.set('unit', unit)
         _handle_ca(ca, el)
         return el, m.start(), m.end()
 
