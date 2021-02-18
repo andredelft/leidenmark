@@ -11,9 +11,10 @@ CA      = r'((?:ca)?)'
 NUM     = r'(\d+(?:-\d+)?|\?|)'
 LINE    = r'((?:lin)?)'
 
-RE_CHARACTER_GAP = fr'\[{CA}\.{NUM}\]'
-RE_LINE_GAP      = fr'lost\.{CA_DOT}{NUM}lin'
-RE_SPACE         = fr'vac\.{CA_DOT}{NUM}([a-zA-Z]*)'
+RE_CHARACTER_LOST      = fr'\[{CA}\.{NUM}\]'
+RE_CHARACTER_ILLEGIBLE = fr'{CA}\.{NUM}'
+RE_LINE_LOST           = fr'lost\.{CA_DOT}{NUM}lin'
+RE_SPACE               = fr'vac\.{CA_DOT}{NUM}([a-zA-Z]*)'
 
 RE_SUPPLIED = r'\[([^\[\]\n]*?)\]'
 
@@ -58,12 +59,18 @@ class CompleteSquareBrackets(Preprocessor):
 
 class CharacterGapProcessor(InlineProcessor):
 
+    def __init__(self, *args, reason=None, **kwargs):
+        self.reason = reason
+        super().__init__(*args, **kwargs)
+
     def handleMatch(self, m, data):
         ca, num = m.groups()
         el = etree.Element('gap')
         _handle_num(num, el)
         el.set('unit', 'character')
         _handle_ca(ca, el)
+        if self.reason:
+            el.set('reason', self.reason)
         return el, m.start(), m.end()
 
 
