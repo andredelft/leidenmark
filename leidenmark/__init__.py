@@ -17,8 +17,11 @@ from .gaps_spaces import (
     CompleteSquareBrackets,
     RE_SPACE, SpaceProcessor,
     RE_LINE_LOST, LineGapProcessor,
-    RE_CHARACTER_LOST, RE_CHARACTER_ILLEGIBLE, CharacterGapProcessor,
-    RE_SUPPLIED, SuppliedProcessor
+    RE_CHARACTER_LOST, RE_CHARACTER_ILLEGIBLE, CharacterGapProcessor
+)
+from .brackets import (
+    RE_SUPPLIED, SuppliedProcessor,
+    RE_ERASURE, ErasureProcessor
 )
 from .foreign import RE_FOREIGN, ForeignProcessor
 from .misc import HetaProcessor, RE_HETA
@@ -58,6 +61,7 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(LineGapProcessor(RE_LINE_LOST, md), 'line_gaps', 118)
         md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_LOST, md, reason='lost'), 'character_lost', 117)
         md.inlinePatterns.register(ForeignProcessor(RE_FOREIGN, md), 'foreign', 116)
+        md.inlinePatterns.register(ErasureProcessor(RE_ERASURE, md), 'erasure',  115)
         md.inlinePatterns.register(SuppliedProcessor(RE_SUPPLIED, md), 'supplied', 5)
         md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_ILLEGIBLE, md, reason='illegible'), 'character_illegible', 4)
         md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor

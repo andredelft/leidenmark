@@ -16,8 +16,6 @@ RE_CHARACTER_ILLEGIBLE = fr'{CA}\.{NUM}'
 RE_LINE_LOST           = fr'lost\.{CA_DOT}{NUM}lin'
 RE_SPACE               = fr'vac\.{CA_DOT}{NUM}([a-zA-Z]*)'
 
-RE_SUPPLIED = r'\[([^\[\]\n]*?)\]'
-
 def _handle_ca(ca, el):
     if ca:
         el.set('precision', 'low')
@@ -97,13 +95,4 @@ class SpaceProcessor(InlineProcessor):
             unit = 'character'
         el.set('unit', unit)
         _handle_ca(ca, el)
-        return el, m.start(), m.end()
-
-
-class SuppliedProcessor(InlineProcessor):
-
-    def handleMatch(self, m, data):
-        el = etree.Element('supplied')
-        el.set('reason', 'lost')
-        el.text = m.group(1)
         return el, m.start(), m.end()
