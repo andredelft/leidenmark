@@ -43,20 +43,20 @@ The output of the above lines is the following XML snippet:
 </div>
 ```
 
-This extension can also be used in combination with other markdown extensions by importing the extension `LeidenPlus` directly:
+`leiden_plus()` is syntactic sugar for the registered Markdown extension, and equivalent to:
 
 ```python
+>>> import leidenmark
 >>> from markdown import markdown
->>> from leidenmark import LeidenPlus
->>> markdown(content, extensions=[LeidenPlus()]) # Other extensions can be added to this list
+>>> markdown(content, extensions=['leiden_plus']) # Other extensions can be added to this list
 ```
 
 ## Configuration
 
-Given that this is a Markdown extension, conventions like `*italics*` and `**bold**` will also be recognized an converted (these in particular will additionally be transformed to the TEI element [`<hi>`](https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-hi.html)). Though these are _in principle_ not part of the Leiden+ syntax, _in practice_ the use of italics and boldface is still encountered a lot. Therefore, support is maintaned by default, which can be switched off by passing `strict = True`:
+Given that this is a Markdown extension, conventions like `*italics*` and `**bold**` will also be recognized an converted (these in particular will additionally be transformed to the TEI element [`<hi>`](https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-hi.html)). Though these are _in principle_ not part of the Leiden+ syntax, _in practice_ the use of italics and boldface is still encountered a lot. Therefore, support is maintaned by default, which can be switched off by passing `strict=True`:
 
 ```python
->>> leiden_plus(content, strict = True)
+>>> leiden_plus(content, strict=True)
 ```
 
 NB: The blockprocessors for paragraphs and ordered list are always switched off, because they interfer too much with Leiden+.
