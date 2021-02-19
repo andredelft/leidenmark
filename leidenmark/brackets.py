@@ -3,6 +3,8 @@ import xml.etree.ElementTree as etree
 
 from markdown.inlinepatterns import InlineProcessor
 
+from .util import ContextInlineMixin
+
 __all__ = ['RE_SUPPLIED', 'RE_ERASURE', 'SuppliedProcessor', 'ErasureProcessor']
 
 def format_bracket_re(opening_bracket, closing_bracket):
@@ -25,10 +27,16 @@ class BracketProcessor(InlineProcessor):
         return el, m.start(), m.end()
 
 
-class SuppliedProcessor(BracketProcessor):
+class SuppliedProcessor(BracketProcessor, ContextInlineMixin):
 
     tag = 'supplied'
     attrs = {'reason': 'lost'}
+
+    def handleMatch(self, m, data):
+        if not self.in_leiden_plus():
+            return None, None, None
+        else:
+            return super().handleMatch(m, data)
 
 
 class ErasureProcessor(BracketProcessor):

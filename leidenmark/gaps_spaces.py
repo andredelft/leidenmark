@@ -5,6 +5,7 @@ from markdown.preprocessors import Preprocessor
 from markdown.inlinepatterns import InlineProcessor
 
 from .line_nums import LINE_NUM
+from .util import ContextInlineMixin
 
 CA_DOT  = r'((?:ca\.)?)'
 CA      = r'((?:ca)?)'
@@ -57,9 +58,7 @@ class CompleteSquareBrackets(Preprocessor):
 
 class CharacterGapProcessor(InlineProcessor):
 
-    def __init__(self, *args, reason=None, **kwargs):
-        self.reason = reason
-        super().__init__(*args, **kwargs)
+    reason = ''
 
     def handleMatch(self, m, data):
         ca, num = m.groups()
@@ -70,6 +69,22 @@ class CharacterGapProcessor(InlineProcessor):
         if self.reason:
             el.set('reason', self.reason)
         return el, m.start(), m.end()
+
+
+class CharacterLostProcessor(CharacterGapProcessor):
+
+    reason = 'lost'
+
+
+class CharacterIllegibleProcessor(CharacterGapProcessor, ContextInlineMixin):
+
+    reason = 'illegible'
+
+    def handleMatch(self, m, data):
+        if not m.group(2) or not self.in_leiden_plus():
+            return None, None, None
+        else:
+            return super().handleMatch(m, data)
 
 
 class LineGapProcessor(InlineProcessor):

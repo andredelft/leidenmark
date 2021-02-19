@@ -17,7 +17,8 @@ from .gaps_spaces import (
     CompleteSquareBrackets,
     RE_SPACE, SpaceProcessor,
     RE_LINE_LOST, LineGapProcessor,
-    RE_CHARACTER_LOST, RE_CHARACTER_ILLEGIBLE, CharacterGapProcessor
+    RE_CHARACTER_LOST, CharacterLostProcessor,
+    RE_CHARACTER_ILLEGIBLE, CharacterIllegibleProcessor
 )
 from .brackets import (
     RE_SUPPLIED, SuppliedProcessor,
@@ -59,11 +60,11 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(MilestoneProcessor(RE_MIL, md), 'milestones', 120)
         md.inlinePatterns.register(SpaceProcessor(RE_SPACE, md), 'spaces', 119)
         md.inlinePatterns.register(LineGapProcessor(RE_LINE_LOST, md), 'line_gaps', 118)
-        md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_LOST, md, reason='lost'), 'character_lost', 117)
+        md.inlinePatterns.register(CharacterLostProcessor(RE_CHARACTER_LOST, md), 'character_lost', 117)
         md.inlinePatterns.register(ForeignProcessor(RE_FOREIGN, md), 'foreign', 116)
         md.inlinePatterns.register(ErasureProcessor(RE_ERASURE, md), 'erasure',  115)
         md.inlinePatterns.register(SuppliedProcessor(RE_SUPPLIED, md), 'supplied', 5)
-        md.inlinePatterns.register(CharacterGapProcessor(RE_CHARACTER_ILLEGIBLE, md, reason='illegible'), 'character_illegible', 4)
+        md.inlinePatterns.register(CharacterIllegibleProcessor(RE_CHARACTER_ILLEGIBLE, md), 'character_illegible', 4)
         md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor
         md.treeprocessors.register(DivisionMarkTreeproc(md), 'divison_treeproc', 120)
         md.treeprocessors.register(ColumnContainerTreeproc(md), 'col_container', 119)

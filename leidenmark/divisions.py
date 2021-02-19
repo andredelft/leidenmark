@@ -103,10 +103,13 @@ class DivisionMarkProcessor(BlockProcessor):
             blocks.insert(0, '\n'.join(lines[1:]))
 
         match = self.RE_OPEN.search(lines[0])
-        if not match:
+        if match:
+            self.parser.state.set('lp-div') # TODO: this parser state allows for the divison logic to be much cleaner!
+        else:
             match = self.RE_CLOSE.search(lines[0])
+            self.parser.state.reset()
         el = etree.SubElement(parent, match.group(1))
-        attribs = [attr.split('=', maxsplit = 1) for attr in match.group(2).split(' ')]
+        attribs = [attr.split('=', maxsplit=1) for attr in match.group(2).split(' ')]
         [el.set(*attrib) for attrib in attribs]
 
 
