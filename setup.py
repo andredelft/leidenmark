@@ -1,10 +1,12 @@
 from setuptools import setup, find_packages
+from leidenmark import __version__
 
 with open('README.md') as f:
     README = f.read()
 
 setup(
     name='leidenmark',
+    version=__version__,
     description='A markdown extension for converting Leiden+ epigraphic text to TEI Epidoc XML',
     packages=find_packages(),
     install_requires=['markdown', 'lxml>=4.5', 'regex', 'dh_utils'],

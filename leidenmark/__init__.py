@@ -12,7 +12,7 @@ from .divisions import (
     RemoveThrowaway
 )
 from .line_nums import LineNumsPreproc, NumberedBlocksProcessor
-from .milestones import RE_MIL, MilestoneProcessor
+from .milestones import register_paragraphos, RE_MIL, MilestoneProcessor
 from .gaps_spaces import (
     CompleteSquareBrackets,
     RE_SPACE, SpaceProcessor,
@@ -26,7 +26,9 @@ from .brackets import (
 )
 from .foreign import RE_FOREIGN, ForeignProcessor
 from .misc import HetaProcessor, RE_HETA
-from .exceptions import LeidenPlusSyntaxError
+
+
+__version__ = "0.1.28"
 
 
 class LeidenPlus(Extension):
@@ -65,12 +67,12 @@ class LeidenPlus(Extension):
         md.inlinePatterns.register(ErasureProcessor(RE_ERASURE, md), 'erasure',  115)
         md.inlinePatterns.register(SuppliedProcessor(RE_SUPPLIED, md), 'supplied', 5)
         md.inlinePatterns.register(CharacterIllegibleProcessor(RE_CHARACTER_ILLEGIBLE, md), 'character_illegible', 4)
-        md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49) # After UnderscoreProcessor
+        md.inlinePatterns.register(HetaProcessor(RE_HETA, md), 'heta', 49)  # After UnderscoreProcessor
         md.treeprocessors.register(DivisionMarkTreeproc(md), 'divison_treeproc', 120)
         md.treeprocessors.register(ColumnContainerTreeproc(md), 'col_container', 119)
         md.postprocessors.register(RemoveThrowaway(md), 'remove_throwaway', 1)
         md.postprocessors.register(TEIPostprocessor(md, configs['indent'], configs['with_root']), 'to_epidoc', 0)
-
+        register_paragraphos(md)
 
 class LeidenEscape(Extension):
 
