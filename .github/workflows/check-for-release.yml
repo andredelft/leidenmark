@@ -1,0 +1,24 @@
+# Creates release if version has changed
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  check-release:
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Get latest tag
+      id: latest
+      uses: WyriHaximus/github-action-get-previous-tag@v1
+    - name: Get current tag
+      id: current
+      run: echo "::set-output name=tag::v$(python setup.py --version)"
+    - name: Trigger release
+      if: ${{ steps.latest.outputs.tag == setps.current.outputs.tag }}
+      run: echo "tags are the same"
