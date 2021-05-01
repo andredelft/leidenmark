@@ -28,9 +28,9 @@ jobs:
         tag: something
     - name: Get checks
       run: echo "${{ setps.existing_tag.outputs.exists }} and ${{ setps.nonexisting_tag.outputs.exists }}"
-    - outputs:
-        # latest_version: ${{ steps.latest.outputs.version }}
-        current_version: ${{ setps.current.outputs.version }}
+    outputs:
+      # latest_version: ${{ steps.latest.outputs.version }}
+      current_version: ${{ setps.current.outputs.version }}
 
   # release:
   #   runs-on: ubuntu-latest
