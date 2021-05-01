@@ -27,7 +27,7 @@ jobs:
       with:
         tag: something
     - name: Get checks
-      run: echo "${{ steps.existing_tag.outputs.exists }} and ${{ setps.nonexisting_tag.outputs.exists }}"
+      run: echo "${{ steps.existing_tag.outputs.exists }} and ${{ steps.nonexisting_tag.outputs.exists }}"
     outputs:
       # latest_version: ${{ steps.latest.outputs.version }}
       current_version: ${{ steps.current.outputs.version }}
