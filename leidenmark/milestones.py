@@ -3,7 +3,8 @@ from xml.etree import ElementTree as etree
 
 from markdown.inlinepatterns import InlineProcessor
 
-RE_MIL = fr'<=\.(ms|lb|cb|pb|gb) ([^<\n]+?)\s*=>'
+RE_MIL = r'<=\.(ms|lb|cb|pb|gb) ([^<\n]+?)\s*=>'
+RE_PARAGRAPHOS = r'(?<=\n)----[^\S\n]*(?=\n)'
 
 
 class MilestoneProcessor(InlineProcessor):
@@ -50,9 +51,27 @@ class MilestoneProcessor(InlineProcessor):
                 el.set('n', cont_parts[-1])
 
         elif mil_type in ['lb', 'cb', 'gb']:
-            el.set('type', {'lb':'line', 'cb':'column', 'gb':'gathering'}[mil_type])
+            el.set(
+                'type',
+                {'lb': 'line', 'cb': 'column', 'gb': 'gathering'}[mil_type]
+            )
             if len(cont_parts) > 1:
                 el.set('ed', cont_parts[:-1])
             el.set('n', cont_parts[-1])
 
         return el, m.start(), m.end()
+
+
+class ParagraphosProcessor(InlineProcessor):
+
+    def handleMatch(self, m, data):
+        el = etree.Element('milestone')
+        el.set('rend', 'paragraphos')
+        el.set('unit', 'undefined')
+        return el, m.start(), m.end()
+
+
+def register_paragraphos(md):
+    md.inlinePatterns.register(
+        ParagraphosProcessor(RE_PARAGRAPHOS, md), 'paragraphos', 110
+    )
