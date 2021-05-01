@@ -21,7 +21,7 @@ jobs:
     - name: Get current tag
       id: current
       run: python setup.py --version
-      run: echo "::set-output name=tag::v$(python setup.py --version)"
+      # run: echo "::set-output name=tag::v$(python setup.py --version)"
     # - outputs:
     #     latest_version: v${{ steps.latest.outputs.tag }}
     #     current_version: v${{ setps.current.outputs.tag }}
