@@ -21,16 +21,16 @@ jobs:
     - uses: mukunku/tag-exists-action@v1.0.0
       id: existing_tag
       with:
-        tag: ${{ setps.current.outputs.version }}
+        tag: ${{ steps.current.outputs.version }}
     - uses: mukunku/tag-exists-action@v1.0.0
       id: nonexisting_tag
       with:
         tag: something
     - name: Get checks
-      run: echo "${{ setps.existing_tag.outputs.exists }} and ${{ setps.nonexisting_tag.outputs.exists }}"
+      run: echo "${{ steps.existing_tag.outputs.exists }} and ${{ setps.nonexisting_tag.outputs.exists }}"
     outputs:
       # latest_version: ${{ steps.latest.outputs.version }}
-      current_version: ${{ setps.current.outputs.version }}
+      current_version: ${{ steps.current.outputs.version }}
 
   # release:
   #   runs-on: ubuntu-latest
