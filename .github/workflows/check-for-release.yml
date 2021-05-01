@@ -29,11 +29,10 @@ jobs:
       version_exists: ${{ steps.existing_tag.outputs.exists }}
 
   release:
+    name: Create Release
     runs-on: ubuntu-latest
     needs: check-tags
     if: ${{ needs.check-tags.outputs.version_exists == 'true' }}
-    name: Create Release
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
