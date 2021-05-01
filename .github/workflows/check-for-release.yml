@@ -22,5 +22,5 @@ jobs:
       id: current
       run: echo "::set-output name=tag::v$(python setup.py --version)"
     - name: Trigger release
-      if: ${{ steps.latest.outputs.tag == setps.current.outputs.tag }}
+      if: ${{ steps.latest.outputs.tag == steps.current.outputs.tag }}
       run: echo "Tags are the same!"
