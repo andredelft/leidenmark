@@ -20,6 +20,7 @@ jobs:
     #   uses: WyriHaximus/github-action-get-previous-tag@v1
     - name: Get current tag
       id: current
+      run: python setup.py --version
       run: echo "::set-output name=tag::v$(python setup.py --version)"
     # - outputs:
     #     latest_version: v${{ steps.latest.outputs.tag }}
