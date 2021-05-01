@@ -1,8 +1,9 @@
 # Creates release if version has changed
+name: Check for release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   check-release:
@@ -21,4 +22,4 @@ jobs:
       run: echo "::set-output name=tag::v$(python setup.py --version)"
     - name: Trigger release
       if: ${{ steps.latest.outputs.tag == setps.current.outputs.tag }}
-      run: echo "tags are the same"
+      run: echo "Tags are the same!"
