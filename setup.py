@@ -17,7 +17,7 @@ setup(
     url='https://github.com/andredelft/leidenmark',
     python_requires='>=3.6',
     author='André van Delft',
-    author_email='andrevandelft@outlook.com',
+    author_email='andre@delve.nu',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Programming Language :: Python :: 3'
