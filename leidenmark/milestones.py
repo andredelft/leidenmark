@@ -7,6 +7,7 @@ from markdown.blockprocessors import BlockProcessor
 from markdown.inlinepatterns import InlineProcessor
 
 RE_MIL = r'<=\.(ms|lb|cb|pb|gb) ([^<\n]+?)\s*=>'
+RE_DIPLE = r'\(\(diple\??\)\)'
 RE_PARAGRAPHOS = r'(?<=\n)----[^\S\n]*(?=\n)'
 
 
@@ -65,6 +66,13 @@ class MilestoneProcessor(InlineProcessor):
         return el, m.start(), m.end()
 
 
+class DipleProcessor(InlineProcessor):
+
+    def handleMatch(self, m, data):
+        el = etree.Element('milestone', rend='diple', unit='undefined')
+        return el, m.start(), m.end()
+
+
 class ParagraphosProcessor(BlockProcessor):
 
     def test(self, parent, block):
@@ -80,13 +88,18 @@ class ParagraphosProcessor(BlockProcessor):
 
     def run(self, parent, blocks):
         blocks.pop(0)
-        etree.SubElement(parent, 'milestone', rend='paragraphos', unit='undefined')
+        etree.SubElement(
+            parent, 'milestone', rend='paragraphos', unit='undefined'
+        )
 
 
 def register_milestones(md):
     # NB: MilestoneProcessor is not official Leiden+!
     md.inlinePatterns.register(
         MilestoneProcessor(RE_MIL, md), 'milestones', 120
+    )
+    md.inlinePatterns.register(
+        DipleProcessor(RE_DIPLE, md), 'diple', 120
     )
     md.parser.blockprocessors.register(  # Before HRProcessor
         ParagraphosProcessor(md.parser), 'paragraphos', 51

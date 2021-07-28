@@ -8,3 +8,7 @@ def test_paragraphos():
         leiden_plus('<= 1. In between\n---\n2. Two lines =>') ==
         '<ab><l n="1">In between</l><milestone rend="paragraphos" unit="undefined"/><l n="2">Two lines</l></ab>'
     )
+
+
+def test_diple():
+    assert leiden_plus('((diple))') == '<milestone rend="diple" unit="undefined"/>'
