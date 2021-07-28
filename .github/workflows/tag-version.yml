@@ -37,7 +37,9 @@ jobs:
     needs: check-version
     if: ${{ needs.check-version.outputs.version_exists == 'false' }}
     steps:
-    - name: Bump version and push tag
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Push tag
       uses: ChloePlanet/github-tag-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
