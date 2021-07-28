@@ -1,17 +1,19 @@
-import re
 import xml.etree.ElementTree as etree
 
 from markdown.inlinepatterns import InlineProcessor
 
 from .util import ContextInlineMixin
 
-__all__ = ['RE_SUPPLIED', 'RE_ERASURE', 'SuppliedProcessor', 'ErasureProcessor']
 
 def format_bracket_re(opening_bracket, closing_bracket):
-    return fr'[{opening_bracket}]([^{opening_bracket}{closing_bracket}\n]*?)[{closing_bracket}]'
+    return (
+        fr'[{opening_bracket}]([^{opening_bracket}{closing_bracket}\n]*?)'
+        fr'[{closing_bracket}]'
+    )
+
 
 RE_SUPPLIED = format_bracket_re(r'\[', r'\]')
-RE_ERASURE  = format_bracket_re(r'\u301a\u27e6', r'\u301b\u27e7')
+RE_ERASURE = format_bracket_re(r'\u301a\u27e6', r'\u301b\u27e7')
 
 
 class BracketProcessor(InlineProcessor):

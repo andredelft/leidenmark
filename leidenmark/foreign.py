@@ -2,7 +2,7 @@ from xml.etree import ElementTree as etree
 
 from markdown.inlinepatterns import InlineProcessor
 
-RE_FOREIGN = '~\|(.+?)\|~([a-zA-Z\-]+)'
+RE_FOREIGN = r'~\|(.+?)\|~([a-zA-Z\-]+)'
 
 
 class ForeignProcessor(InlineProcessor):

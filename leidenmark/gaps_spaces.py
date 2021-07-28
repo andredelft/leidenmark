@@ -7,19 +7,21 @@ from markdown.inlinepatterns import InlineProcessor
 from .line_nums import LINE_NUM
 from .util import ContextInlineMixin
 
-CA_DOT  = r'((?:ca\.)?)'
-CA      = r'((?:ca)?)'
-NUM     = r'(\d+(?:-\d+)?|\?|)'
-LINE    = r'((?:lin)?)'
+CA_DOT = r'((?:ca\.)?)'
+CA = r'((?:ca)?)'
+NUM = r'(\d+(?:-\d+)?|\?|)'
+LINE = r'((?:lin)?)'
 
-RE_CHARACTER_LOST      = fr'\[{CA}\.{NUM}\]'
+RE_CHARACTER_LOST = fr'\[{CA}\.{NUM}\]'
 RE_CHARACTER_ILLEGIBLE = fr'{CA}\.{NUM}'
-RE_LINE_LOST           = fr'lost\.{CA_DOT}{NUM}lin'
-RE_SPACE               = fr'vac\.{CA_DOT}{NUM}([a-zA-Z]*)'
+RE_LINE_LOST = fr'lost\.{CA_DOT}{NUM}lin'
+RE_SPACE = fr'vac\.{CA_DOT}{NUM}([a-zA-Z]*)'
+
 
 def _handle_ca(ca, el):
     if ca:
         el.set('precision', 'low')
+
 
 def _handle_num(num, el):
     if num == '?':
@@ -34,7 +36,9 @@ def _handle_num(num, el):
 
 class CompleteSquareBrackets(Preprocessor):
 
-    RE_START = re.compile(fr'^(?P<start>(?:{LINE_NUM})?\s*)(?P<end>[^\[\]\n]*?\])')
+    RE_START = re.compile(
+        fr'^(?P<start>(?:{LINE_NUM})?\s*)(?P<end>[^\[\]\n]*?\])'
+    )
     RE_END = re.compile(r'(?P<start>\[[^\[\]\n]*?)(?<!\s)\s*$')
 
     def run(self, lines):
