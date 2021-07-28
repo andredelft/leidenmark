@@ -34,7 +34,7 @@ jobs:
   generate-tag:
     name: Generate tag
     runs-on: ubuntu-latest
-    needs: check-tags
+    needs: check-version
     if: ${{ needs.check-tags.outputs.version_exists == 'false' }}
     steps:
     - name: Bump version and push tag
