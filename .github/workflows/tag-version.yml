@@ -38,13 +38,13 @@ jobs:
     if: ${{ needs.check-version.outputs.version_exists == 'false' }}
     steps:
     - name: Create tag
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.ACCESS_TOKEN }}
-          script: |
-            github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/${{ needs.check-version.outputs.tag }}",
-              sha: context.sha
-            })
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{ secrets.ACCESS_TOKEN }}
+        script: |
+          github.git.createRef({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: "refs/tags/${{ needs.check-version.outputs.tag }}",
+            sha: context.sha
+          })
