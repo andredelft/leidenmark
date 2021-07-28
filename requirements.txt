@@ -1,0 +1,4 @@
+markdown>=3.3
+lxml>=4.5
+dh_utils==0.1.23
+regex

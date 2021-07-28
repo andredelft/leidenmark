@@ -13,9 +13,9 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Install pytest
+    - name: Install requirements
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
+        pip install pytest -r requirements.txt
     - name: Run tests
       run: pytest
