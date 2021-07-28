@@ -1,0 +1,18 @@
+# Creates release if version has changed
+name: Tag new version
+
+on:
+  workflow_run:
+    workflows: [ "Run tests" ]
+    branches: [ master ]
+    types: [ completed ]
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: christophebedard/tag-version-commit@v1
+      with:
+        token: ${{ secrets.ACCESS_TOKEN }}
+        version_tag_prefix: 'v'
