@@ -76,7 +76,7 @@ class DipleProcessor(InlineProcessor):
 class ParagraphosProcessor(BlockProcessor):
 
     def test(self, parent, block):
-        if not block.strip() == '---':
+        if not re.search('^-{3,}$', block.strip()):
             return False
 
         try:

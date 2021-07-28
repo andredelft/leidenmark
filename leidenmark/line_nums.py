@@ -9,16 +9,19 @@ LINE_NUM = r'([0-9]+[a-z]?´?(?:[–\-/][0-9]*[a-z]?)?)\.(-?)'
 
 class LineNumsPreproc(Preprocessor):
 
-    RE_LINE = re.compile(fr'^{LINE_NUM}\s*(.*?)(?<!\s)\s*$')
+    RE_REMAINDER = r'\s*(.*?)(?<!\s)\s*$'
+
+    RE_LINE = re.compile(fr'^{LINE_NUM}{RE_REMAINDER}')
+    RE_LINE_INDENT = re.compile(fr'^\((\d+),\s*indent\){RE_REMAINDER}')
 
     def run(self, lines):
         new_lines = []
         prev = True  # Track whether previous line has a line number or not
         # so we can separate numbered lines in blocks
         for line in lines:
-            match = self.RE_LINE.search(line)
-            if match:
-                n, hyph, rem = match.groups()
+            m = self.RE_LINE.search(line)
+            if m:
+                n, hyph, rem = m.groups()
                 n = n.replace('-', '–')
                 # Use en-dash for ranges instead of hyphen
                 line_break = ' break=no' if hyph else ''
@@ -27,10 +30,19 @@ class LineNumsPreproc(Preprocessor):
                 new_lines.append(f'{{LINE n={n}{line_break}}}{rem}')
                 prev = True
             else:
-                if prev:
-                    new_lines.append('')
-                new_lines.append(line)
-                prev = False
+                m = self.RE_LINE_INDENT.search(line)
+                if m:
+                    n, rem = m.groups()
+                    if not prev:
+                        new_lines.append('')
+                    new_lines.append(f'{{LINE n={n} rend=indent}}{rem}')
+                    new_lines.append(f'')
+                    prev = True
+                else:
+                    if prev:
+                        new_lines.append('')
+                    new_lines.append(line)
+                    prev = False
         return new_lines
 
 
@@ -46,9 +58,9 @@ class NumberedBlocksProcessor(BlockProcessor):
     def run(self, parent, blocks):
         lines = blocks.pop(0).split('\n')
         for line in lines:
-            match = self.RE_LINE_DECL.search(line)
-            attribs = [attr.split('=') for attr in match.group(1).split(' ')]
-            content = line[match.end():]
+            m = self.RE_LINE_DECL.search(line)
+            attribs = [attr.split('=') for attr in m.group(1).split(' ')]
+            content = line[m.end():]
 
             line_el = etree.SubElement(parent, 'l')
             for attr in attribs:
