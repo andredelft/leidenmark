@@ -71,7 +71,11 @@ class ParagraphosProcessor(InlineProcessor):
         return el, m.start(), m.end()
 
 
-def register_paragraphos(md):
+def register_milestones(md):
+    # NB: MilestoneProcessor is not official Leiden+!
+    md.inlinePatterns.register(
+        MilestoneProcessor(RE_MIL, md), 'milestones', 120
+    )
     md.inlinePatterns.register(
         ParagraphosProcessor(RE_PARAGRAPHOS, md), 'paragraphos', 110
     )

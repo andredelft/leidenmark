@@ -54,3 +54,12 @@ class NumberedBlocksProcessor(BlockProcessor):
             for attr in attribs:
                 line_el.set(*attr)
             line_el.text = content
+
+
+def register_line_nums(md):
+    md.preprocessors.register(
+        LineNumsPreproc(md), 'linenums_preproc', 11
+    )
+    md.parser.blockprocessors.register(
+        NumberedBlocksProcessor(md.parser), 'lineblocks', 120
+    )

@@ -115,3 +115,25 @@ class SpaceProcessor(InlineProcessor):
         el.set('unit', unit)
         _handle_ca(ca, el)
         return el, m.start(), m.end()
+
+
+def register_gaps_spaces(md):
+    md.preprocessors.register(
+        CompleteSquareBrackets(md), 'complete_square_brackets', 119
+    )
+    md.inlinePatterns.register(
+        SpaceProcessor(RE_SPACE, md), 'spaces', 119
+    )
+    md.inlinePatterns.register(
+        LineGapProcessor(RE_LINE_LOST, md), 'line_gaps', 11
+    )
+    md.inlinePatterns.register(
+        CharacterLostProcessor(
+            RE_CHARACTER_LOST, md
+        ), 'character_lost', 117
+    )
+    md.inlinePatterns.register(
+        CharacterIllegibleProcessor(
+            RE_CHARACTER_ILLEGIBLE, md
+        ), 'character_illegible', 4
+    )

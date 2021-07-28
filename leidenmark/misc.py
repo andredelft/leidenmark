@@ -11,3 +11,10 @@ class HetaProcessor(InlineProcessor):
         el = etree.Element('em')
         el.text = m.group(1)
         return el, m.start(), m.end()
+
+
+def register_misc(md):
+
+    md.inlinePatterns.register(
+        HetaProcessor(RE_HETA, md), 'heta', 49
+    )  # After UnderscoreProcessor

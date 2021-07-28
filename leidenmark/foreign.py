@@ -12,3 +12,9 @@ class ForeignProcessor(InlineProcessor):
         el.set('xml:lang', m.group(2))
         el.text = m.group(1)
         return el, m.start(), m.end()
+
+
+def register_foreign(md):
+    md.inlinePatterns.register(
+        ForeignProcessor(RE_FOREIGN, md), 'foreign', 116
+    )

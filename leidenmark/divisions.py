@@ -233,3 +233,28 @@ class RemoveThrowaway(Postprocessor):
     """ Remove throwaway that TrivialProcessor creates """
     def run(self, text):
         return re.sub(fr'\s*\<\s*/?\s*{THROWAWAY_TAG}\s*/?\s*\>\s*', '', text)
+
+
+def register_divisions(md):
+    md.preprocessors.register(
+        DivisionsPreproc(md), 'divison_preproc', 120
+    )
+    md.parser.blockprocessors.register(
+        DivisionMarkProcessor(md.parser), 'divison_marks', 119
+    )
+    md.treeprocessors.register(
+        DivisionMarkTreeproc(md), 'divison_treeproc', 120
+    )
+    md.treeprocessors.register(
+        ColumnContainerTreeproc(md), 'col_container', 119
+    )
+    md.postprocessors.register(
+        RemoveThrowaway(md), 'remove_throwaway', 1
+    )
+
+
+def deregister_paragraphs(md):
+    md.parser.blockprocessors.deregister('paragraph')
+    md.parser.blockprocessors.register(
+        TrivialProcessor(md.parser), 'fallback', 0
+    )

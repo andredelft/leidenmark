@@ -45,3 +45,12 @@ class ErasureProcessor(BracketProcessor):
 
     tag = 'del'
     attrs = {'rend': 'erasure'}
+
+
+def register_brackets(md):
+    md.inlinePatterns.register(
+        SuppliedProcessor(RE_SUPPLIED, md), 'supplied', 5
+    )
+    md.inlinePatterns.register(
+        ErasureProcessor(RE_ERASURE, md), 'erasure',  115
+    )
