@@ -1,7 +1,4 @@
-from markdown.inlinepatterns import InlineProcessor
-
-
-class ContextInlineMixin(InlineProcessor):
+class ContextInlineMixin:
     """
     A mixin for inline processors that obtains information about the element
     tree
