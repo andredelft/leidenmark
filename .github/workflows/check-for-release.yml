@@ -2,8 +2,10 @@
 name: Check for release
 
 on:
-  push:
+  workflow_run:
+    workflows: [ "Run tests" ]
     branches: [ master ]
+    types: [ completed ]
 
 jobs:
   check-tags:

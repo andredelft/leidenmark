@@ -52,10 +52,11 @@ class LeidenPlus(Extension):
             md.inlinePatterns.deregister('em_strong')
             md.inlinePatterns.deregister('em_strong2')
 
-        md.parser.blockprocessors.deregister('paragraph')
-        md.parser.blockprocessors.register(
-            TrivialProcessor(md.parser), 'fallback', 0
-        )
+        if not configs['enable_paragraphs']:
+            md.parser.blockprocessors.deregister('paragraph')
+            md.parser.blockprocessors.register(
+                TrivialProcessor(md.parser), 'fallback', 0
+            )
 
         md.preprocessors.register(
             DivisionsPreproc(md), 'divison_preproc', 120

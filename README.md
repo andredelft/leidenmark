@@ -30,7 +30,7 @@ The output of the above lines is the following XML snippet:
   <ab>
     <l n="1">Lorem ipsum dolor</l>
     <space quantity="1" unit="line"/>
-    <l n="2">sit amet, con<gap precision="low" quantity="3" unit="character"/>c</l>
+    <l n="2">sit amet, con<gap precision="low" quantity="3" reason="lost" unit="character"/>c</l>
     <l break="no" n="3">etur adipiscing</l>
   </ab>
 </div>
