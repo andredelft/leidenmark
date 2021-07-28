@@ -16,7 +16,7 @@ class DivisionsPreproc(Preprocessor):
     RE_OPEN = re.compile(
         r"""
         (?:
-          <D=\.(\w+)(?:\.(\w+))?         # Division mark
+          <D=\.([\w\+]+)(?:\.(\w+))?     # Division mark
                                          # <D=.number(.divisontype)? ... =D>
           |(<=)(?!\.(?:ms|lb|cb|pb|gb))  # Paragraph mark <= ... =>
                                          # (Check if it is not a milestone)
