@@ -1,0 +1,6 @@
+image: python:3.9
+
+test:
+  script:
+    - pip install pytest -r requirements.txt
+    - pytest
