@@ -27,7 +27,7 @@ from .brackets import (
 from .foreign import RE_FOREIGN, ForeignProcessor
 from .misc import HetaProcessor, RE_HETA
 
-__version__ = '0.1.31'
+__version__ = '0.1.32'
 
 
 class LeidenPlus(Extension):
