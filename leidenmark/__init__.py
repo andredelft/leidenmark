@@ -11,7 +11,7 @@ from .brackets import register_brackets
 from .foreign import register_foreign
 from .misc import register_misc
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 
 class LeidenPlus(Extension):
