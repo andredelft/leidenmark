@@ -1,6 +1,9 @@
 import re
 from xml.etree import ElementTree as etree
 
+from .divisions import LEIDEN_PLUS_STATE
+
+from markdown.blockprocessors import BlockProcessor
 from markdown.inlinepatterns import InlineProcessor
 
 RE_MIL = r'<=\.(ms|lb|cb|pb|gb) ([^<\n]+?)\s*=>'
@@ -62,13 +65,22 @@ class MilestoneProcessor(InlineProcessor):
         return el, m.start(), m.end()
 
 
-class ParagraphosProcessor(InlineProcessor):
+class ParagraphosProcessor(BlockProcessor):
 
-    def handleMatch(self, m, data):
-        el = etree.Element('milestone')
-        el.set('rend', 'paragraphos')
-        el.set('unit', 'undefined')
-        return el, m.start(), m.end()
+    def test(self, parent, block):
+        if not block.strip() == '---':
+            return False
+
+        try:
+            state = self.parser.state[-1]
+        except IndexError:
+            return False
+        else:
+            return state == LEIDEN_PLUS_STATE
+
+    def run(self, parent, blocks):
+        blocks.pop(0)
+        etree.SubElement(parent, 'milestone', rend='paragraphos', unit='undefined')
 
 
 def register_milestones(md):
@@ -76,6 +88,6 @@ def register_milestones(md):
     md.inlinePatterns.register(
         MilestoneProcessor(RE_MIL, md), 'milestones', 120
     )
-    md.inlinePatterns.register(
-        ParagraphosProcessor(RE_PARAGRAPHOS, md), 'paragraphos', 110
+    md.parser.blockprocessors.register(  # Before HRProcessor
+        ParagraphosProcessor(md.parser), 'paragraphos', 51
     )

@@ -8,6 +8,8 @@ from markdown.postprocessors import Postprocessor
 
 from .exceptions import LeidenPlusSyntaxError
 
+LEIDEN_PLUS_STATE = 'lp-div'
+
 
 class DivisionsPreproc(Preprocessor):
 
@@ -133,7 +135,7 @@ class DivisionMarkProcessor(BlockProcessor):
 
         match = self.RE_OPEN.search(lines[0])
         if match:
-            self.parser.state.set('lp-div')
+            self.parser.state.set(LEIDEN_PLUS_STATE)
             # TODO: this parser state allows for the divison logic to be much
             # cleaner!
         else:
