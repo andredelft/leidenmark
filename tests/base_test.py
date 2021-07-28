@@ -40,7 +40,7 @@ LEIDEN_PLUS_SAMPLE_OUTPUT = """\
     <l n="6">ut labore et dol</l>
     <l break="no" n="7">ore magna aliqua</l>
   </ab>
-</div>
+</div>\
 """
 
 
