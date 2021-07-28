@@ -37,10 +37,14 @@ jobs:
     needs: check-version
     if: ${{ needs.check-version.outputs.version_exists == 'false' }}
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Push tag
-      uses: ChloePlanet/github-tag-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        CUSTOM_TAG: ${{ needs.check-tags.outputs.tag }}
+    - name: Create tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{ needs.check-version.outputs.tag }}",
+              sha: context.sha
+            })
