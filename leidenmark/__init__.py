@@ -9,6 +9,7 @@ from .milestones import register_milestones
 from .gaps_spaces import register_gaps_spaces
 from .brackets import register_brackets
 from .foreign import register_foreign
+from .glyphs import register_glyphs
 from .misc import register_misc
 
 __version__ = '0.2.1'
@@ -46,6 +47,7 @@ class LeidenPlus(Extension):
         register_gaps_spaces(md)
         register_foreign(md)
         register_misc(md)
+        register_glyphs(md)
 
         md.postprocessors.register(
             TEIPostprocessor(
